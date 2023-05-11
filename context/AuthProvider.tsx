@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import axiosConfig from '../helpers/axiosConfig';
+import { instance as axiosInstance } from '../helpers/axiosConfig';
 
 export type User = {
   id: number;
@@ -30,6 +30,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const login = (email: string, password: string) => {
+    setIsLoading(true);
+    axiosInstance
+      .post('/login', {
+        email,
+        password,
+        device_name: 'mobile',
+      })
+      .then(response => {
+        const userResponse: User = {
+          token: response.data.data.token,
+          id: response.data.data.user.id,
+          name: response.data.data.user.name,
+          email: response.data.data.user.email,
+        };
+
+        setUser(userResponse);
+        setError(null);
+        SecureStore.setItemAsync('user', JSON.stringify(userResponse));
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.log(error.response);
+        const key = Object.keys(error.response?.data.errors)[0];
+        setError(error.response?.data.errors[key][0]);
+        setIsLoading(false);
+      });
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -37,34 +66,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser,
         error,
         isLoading,
-        login: (email: string, password: string) => {
-          setIsLoading(true);
-          axiosConfig
-            .post('/login', {
-              email,
-              password,
-              device_name: 'mobile',
-            })
-            .then(response => {
-              const userResponse: User = {
-                token: response.data.data.token,
-                id: response.data.data.user.id,
-                name: response.data.data.user.name,
-                email: response.data.data.user.email,
-              };
-
-              setUser(userResponse);
-              setError(null);
-              SecureStore.setItemAsync('user', JSON.stringify(userResponse));
-              setIsLoading(false);
-            })
-            .catch(error => {
-              console.log(error.response);
-              const key = Object.keys(error.response?.data.errors)[0];
-              setError(error.response?.data.errors[key][0]);
-              setIsLoading(false);
-            });
-        },
+        login,
       }}
     >
       {children}

@@ -1,11 +1,11 @@
 import 'react-native-gesture-handler';
 import React, { useContext, useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './screens/HomeScreen';
 import { AuthContext, AuthContextType } from './context/AuthProvider';
-import LoginScreen from './screens/Auth/LoginScreen';
+import LoginScreen from './screens/LoginScreen';
 import * as SecureStore from 'expo-secure-store';
 
 const Stack = createStackNavigator();
@@ -56,7 +56,7 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={styles.centeredView}>
         <ActivityIndicator size="large" color="gray" />
       </View>
     );
@@ -66,8 +66,8 @@ export default function App() {
     <>
       {user ? (
         <NavigationContainer>
-        <HomeStackNavigator />
-      </NavigationContainer>
+          <HomeStackNavigator />
+        </NavigationContainer>
       ) : (
         <NavigationContainer>
           <AuthStackNavigator />
@@ -76,3 +76,11 @@ export default function App() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+});

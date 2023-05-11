@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-import { AuthContext, AuthContextType } from '../../context/AuthProvider';
+import { AuthContext, AuthContextType } from '../context/AuthProvider';
 
 type LoginScreenProps = {
     navigation: NavigationScreenProp<any,any>
@@ -21,13 +21,13 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginTop: 150, width: 260 }}>
-        <View style={{ alignItems: 'center' }}>
+      <View style={styles.w260}>
+        <View style={styles.titleSubtitleContainer}>
           <Text style={styles.title}>Welcome to the doctor's app!</Text>
           <Text style={[styles.subtitle, styles.mt5]}>Log in to access unique features</Text>
         </View>
-        <View style={{ marginTop: 30 }}>
-          {error && <Text style={{ color: 'red' }}>{error}</Text>}
+        <View style={styles.mt30}>
+          {error && <Text style={styles.error}>{error}</Text>}
           <TextInput
             style={[styles.inputBox, styles.mt4]}
             onChangeText={setEmail}
@@ -45,7 +45,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
             placeholder="Password"
             placeholderTextColor="gray"
             autoCapitalize="none"
-            secureTextEntry={true}
+            secureTextEntry
           />
         </View>
         <TouchableOpacity
@@ -54,7 +54,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
         >
           {isLoading && (
             <ActivityIndicator
-              style={{ marginRight: 18 }}
+              style={styles.mr18}
               size="small"
               color="white"
             />
@@ -71,6 +71,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
+    paddingTop: 150,
+  },
+  titleSubtitleContainer: {
+    alignItems: 'center' 
   },
   title: {
     fontWeight: '600',
@@ -110,10 +114,22 @@ const styles = StyleSheet.create({
     color: 'white',
     textDecorationLine: 'underline',
   },
+  error: {
+    color: 'red',
+  },
+  mr18: {
+    marginRight: 16,
+  },
   mt4: {
     marginTop: 16,
   },
   mt5: {
     marginTop: 22,
   },
+  mt30: {
+    marginTop: 30,
+  },
+  w260: {
+    width: 260,
+  }
 });
