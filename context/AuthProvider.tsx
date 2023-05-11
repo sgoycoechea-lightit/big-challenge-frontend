@@ -2,6 +2,13 @@ import React, { createContext, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { instance as axiosInstance } from '../helpers/axiosConfig';
 
+type LoginResponse = {
+  data: {
+    token: string,
+    user: User,
+  }
+}
+
 export type User = {
   id: number;
   name: string;
@@ -33,7 +40,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = (email: string, password: string) => {
     setIsLoading(true);
     axiosInstance
-      .post('/login', {
+      .post<LoginResponse>('/login', {
         email,
         password,
         device_name: 'mobile',
