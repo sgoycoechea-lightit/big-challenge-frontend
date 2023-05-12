@@ -7,14 +7,13 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthContext, AuthContextType } from '../context/AuthProvider';
+import { StackParamList } from '../Root';
+import Colors from '../constants/Colors';
 
-type LoginScreenProps = {
-    navigation: NavigationScreenProp<any,any>
-};
-
-export default function LoginScreen({ navigation }: LoginScreenProps) {
+export default function LoginScreen({ navigation }: NativeStackScreenProps<StackParamList, 'Login'>
+) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const { login, error, isLoading } = useContext<AuthContextType>(AuthContext);
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2563EB',
+    backgroundColor: Colors.BLUE,
     padding: 12,
     borderRadius: 5,
   },

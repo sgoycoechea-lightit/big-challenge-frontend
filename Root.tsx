@@ -9,9 +9,19 @@ import { AuthContext, AuthContextType } from './context/AuthProvider';
 import LoginScreen from './screens/LoginScreen';
 import * as SecureStore from 'expo-secure-store';
 import { setAxiosToken } from './helpers/axiosConfig';
+import Colors from './constants/Colors';
 
-const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
+export type StackParamList = {
+  Home: undefined;
+  Login: undefined;
+};
+
+export type DrawerParamList = {
+  Home: undefined;
+};
+
+const Stack = createStackNavigator<StackParamList>();
+const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const HomeStackNavigator = () => {
   return (
@@ -19,7 +29,7 @@ const HomeStackNavigator = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen
-        name="Home Screen"
+        name="Home"
         component={HomeScreen}
         options={{ title: 'Home' }}
       />
@@ -33,7 +43,7 @@ const AuthStackNavigator = () => {
       screenOptions={{ headerShown: false, headerBackTitleVisible: false }}
     >
       <Stack.Screen
-        name="Login Screen"
+        name="Login"
         component={LoginScreen}
         options={{ headerShown: false }}
       />
@@ -100,7 +110,7 @@ export default function App() {
             initialRouteName="Home"
             drawerContent={(props) => <DrawerContent {...props} />}
             screenOptions={{
-              drawerActiveBackgroundColor: '#374151',
+              drawerActiveBackgroundColor: Colors.BLUEISH_GRAY_ACTIVE,
               drawerActiveTintColor: 'white',
             }}
           >
@@ -127,10 +137,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     paddingBottom: 50,
-    backgroundColor: '#1F2937',
+    backgroundColor: Colors.BLUEISH_GRAY,
   },
   logoutContainer: {
-    backgroundColor: '#374151',
+    backgroundColor: Colors.BLUEISH_GRAY_ACTIVE,
     height: 68,
     alignItems: 'center',
     flexDirection: 'row',
@@ -140,7 +150,7 @@ const styles = StyleSheet.create({
     height: 36,
     width: 36,
     borderRadius: 18,
-    backgroundColor: '#9CA3AF',
+    backgroundColor: Colors.GRAY,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -156,7 +166,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   logout: {
-    color: '#D1D5DB',
+    color: Colors.TEXT_GRAY,
     fontSize: 12,
   },
 });
