@@ -3,10 +3,8 @@ import * as SecureStore from 'expo-secure-store';
 import { instance as axiosInstance } from '../helpers/axiosConfig';
 
 type LoginResponse = {
-  data: {
-    token: string,
-    user: User,
-  }
+  token: string,
+  data: User,
 }
 
 export type User = {
@@ -47,10 +45,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       })
       .then(response => {
         const userResponse: User = {
-          token: response.data.data.token,
-          id: response.data.data.user.id,
-          name: response.data.data.user.name,
-          email: response.data.data.user.email,
+          token: response.data.token,
+          id: response.data.data.id,
+          name: response.data.data.name,
+          email: response.data.data.email,
         };
 
         setUser(userResponse);
