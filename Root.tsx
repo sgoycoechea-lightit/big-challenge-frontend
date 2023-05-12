@@ -41,12 +41,8 @@ const AuthStackNavigator = () => {
   );
 };
 
-interface DrawerContentProps extends DrawerContentComponentProps {
-  userName: string,
-}
-
-const DrawerContent = ({ userName, ...props }: DrawerContentProps) => {
-  const { logout } = useContext(AuthContext);
+const DrawerContent = (props: DrawerContentComponentProps) => {
+  const { logout, user } = useContext(AuthContext);
   
   return (
     <DrawerContentScrollView
@@ -56,10 +52,10 @@ const DrawerContent = ({ userName, ...props }: DrawerContentProps) => {
       <DrawerItemList {...props} />
       <View style={styles.logoutContainer}>
         <View style={styles.userInitialView}>
-          <Text style={styles.userInitial}>{userName[0]}</Text>
+          <Text style={styles.userInitial}>{user?.name[0]}</Text>
         </View>
         <View style={styles.userNameAndLogoutView}>
-          <Text style={styles.userName}>{userName}</Text>
+          <Text style={styles.userName}>{user?.name}</Text>
           <TouchableOpacity onPress={logout}>
             <Text style={styles.logout}>Sign out</Text>
           </TouchableOpacity>
@@ -102,7 +98,7 @@ export default function App() {
         <NavigationContainer>
           <Drawer.Navigator
             initialRouteName="Home"
-            drawerContent={(props) => <DrawerContent {...props} userName={user.name}  />}
+            drawerContent={(props) => <DrawerContent {...props} />}
             screenOptions={{
               drawerActiveBackgroundColor: '#374151',
               drawerActiveTintColor: 'white',
