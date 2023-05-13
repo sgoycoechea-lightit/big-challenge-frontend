@@ -60,8 +60,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       })
       .catch(error => {
         console.log(error.response);
-        const key = Object.keys(error.response?.data.errors)[0];
-        setError(error.response?.data.errors[key][0]);
+        let value = '';
+        if (error.response?.data.error.fields) {
+          const key = Object.keys(error.response?.data.error.fields)[0];
+          value = error.response?.data.error.fields[key];
+        }
+        const message = error.response?.data.error.message ?? value;
+        setError(message);
       }).finally(() => {
         setIsLoading(false);
       });

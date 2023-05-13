@@ -17,7 +17,7 @@ export type StackParamList = {
 };
 
 export type DrawerParamList = {
-  Home: undefined;
+  HomeStack: undefined;
 };
 
 const Stack = createStackNavigator<StackParamList>();
@@ -107,14 +107,14 @@ export default function App() {
       {user ? (
         <NavigationContainer>
           <Drawer.Navigator
-            initialRouteName="Home"
+            initialRouteName="HomeStack"
             drawerContent={(props) => <DrawerContent {...props} />}
             screenOptions={{
               drawerActiveBackgroundColor: Colors.BLUEISH_GRAY_ACTIVE,
               drawerActiveTintColor: 'white',
             }}
           >
-            <Drawer.Screen name="Home" component={HomeStackNavigator} />
+            <Drawer.Screen name="HomeStack" component={HomeStackNavigator} />
           </Drawer.Navigator>
         </NavigationContainer>
       ) : (
