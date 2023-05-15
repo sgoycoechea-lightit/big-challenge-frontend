@@ -1,18 +1,25 @@
-import 'react-native-gesture-handler';
 import React, { useContext, useEffect, useState } from 'react';
+
 import { ActivityIndicator, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { DrawerContentScrollView, DrawerItemList, createDrawerNavigator, DrawerContentComponentProps } from '@react-navigation/drawer';
-import HomeScreen from './screens/HomeScreen';
-import { AuthContext, AuthContextType } from './context/AuthProvider';
-import LoginScreen from './screens/LoginScreen';
 import * as SecureStore from 'expo-secure-store';
+import 'react-native-gesture-handler';
+
+import { AuthContext, AuthContextType } from './context/AuthProvider';
 import { setAxiosToken } from './helpers/axiosConfig';
+import HomeScreen from './screens/Home';
+import LoginScreen from './screens/Login';
+import RegisterScreen from './screens/Register';
 import Colors from './constants/Colors';
 
-export type StackParamList = {
+export type HomeStackParamList = {
   Home: undefined;
+};
+
+export type AuthStackParamList = {
+  Register: undefined;
   Login: undefined;
 };
 
@@ -20,34 +27,40 @@ export type DrawerParamList = {
   HomeStack: undefined;
 };
 
-const Stack = createStackNavigator<StackParamList>();
+const HomeStack = createStackNavigator<HomeStackParamList>();
+const AuthStack = createStackNavigator<AuthStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const HomeStackNavigator = () => {
   return (
-    <Stack.Navigator
+    <HomeStack.Navigator
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen
+      <HomeStack.Screen
         name="Home"
         component={HomeScreen}
         options={{ title: 'Home' }}
       />
-    </Stack.Navigator>
+    </HomeStack.Navigator>
   );
 };
 
 const AuthStackNavigator = () => {
   return (
-    <Stack.Navigator
+    <AuthStack.Navigator
       screenOptions={{ headerShown: false, headerBackTitleVisible: false }}
     >
-      <Stack.Screen
+      <AuthStack.Screen
         name="Login"
         component={LoginScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, presentation: 'transparentModal' }}
       />
-    </Stack.Navigator>
+      <AuthStack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{ headerShown: false, presentation: 'transparentModal' }}
+      />
+    </AuthStack.Navigator>
   );
 };
 
@@ -112,6 +125,7 @@ export default function App() {
             screenOptions={{
               drawerActiveBackgroundColor: Colors.BLUEISH_GRAY_ACTIVE,
               drawerActiveTintColor: 'white',
+              title: 'Home',
             }}
           >
             <Drawer.Screen name="HomeStack" component={HomeStackNavigator} />
@@ -150,7 +164,7 @@ const styles = StyleSheet.create({
     height: 36,
     width: 36,
     borderRadius: 18,
-    backgroundColor: Colors.GRAY,
+    backgroundColor: Colors.LIGHT_GRAY,
     justifyContent: 'center',
     alignItems: 'center',
   },
