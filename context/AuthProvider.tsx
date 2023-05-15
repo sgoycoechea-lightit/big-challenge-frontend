@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { instance as axiosInstance, setAxiosToken } from '../helpers/axiosConfig';
+import getErrorMessage from '../helpers/getErrorMessage';
 
 type LoginResponse = {
   token: string,
@@ -60,12 +61,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       })
       .catch(error => {
         console.log(error.response);
-        let value = '';
-        if (error.response?.data.error.fields) {
-          const key = Object.keys(error.response?.data.error.fields)[0];
-          value = error.response?.data.error.fields[key];
-        }
-        const message = error.response?.data.error.message ?? value;
+        const message = getErrorMessage(error);
         setError(message);
       }).finally(() => {
         setIsLoading(false);

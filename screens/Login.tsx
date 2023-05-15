@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthContext, AuthContextType } from '../context/AuthProvider';
-import { StackParamList } from '../Root';
+import { AuthStackParamList } from '../Root';
 import Colors from '../constants/Colors';
 
-export default function LoginScreen({ navigation }: NativeStackScreenProps<StackParamList, 'Login'>
+export default function LoginScreen({ navigation }: NativeStackScreenProps<AuthStackParamList, 'Login'>
 ) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -23,12 +23,12 @@ export default function LoginScreen({ navigation }: NativeStackScreenProps<Stack
       <View style={styles.w260}>
         <View style={styles.titleSubtitleContainer}>
           <Text style={styles.title}>Welcome to the doctor's app!</Text>
-          <Text style={[styles.subtitle, styles.mt5]}>Log in to access unique features</Text>
+          <Text style={[styles.subtitle, styles.mt22]}>Log in to access unique features</Text>
         </View>
         <View style={styles.mt30}>
           {error && <Text style={styles.error}>{error}</Text>}
           <TextInput
-            style={[styles.inputBox, styles.mt4]}
+            style={[styles.inputBox, styles.mt16]}
             onChangeText={setEmail}
             value={email}
             placeholder="Email"
@@ -38,7 +38,7 @@ export default function LoginScreen({ navigation }: NativeStackScreenProps<Stack
             autoCapitalize="none"
           />
           <TextInput
-            style={[styles.inputBox, styles.mt4]}
+            style={[styles.inputBox, styles.mt16]}
             onChangeText={setPassword}
             value={password}
             placeholder="Password"
@@ -49,17 +49,25 @@ export default function LoginScreen({ navigation }: NativeStackScreenProps<Stack
         </View>
         <TouchableOpacity
           onPress={() => login(email, password)}
-          style={[styles.loginButton, styles.mt5]}
+          style={[styles.loginButton, styles.mt22]}
         >
           {isLoading && (
             <ActivityIndicator
-              style={styles.mr18}
+              style={styles.mr16}
               size="small"
               color="white"
             />
           )}
           <Text style={styles.loginButtonText}>Log in</Text>
         </TouchableOpacity>
+        <View style={[styles.registerView, styles.mt16]}>
+          <Text style={styles.registerText}>Don't have an account yet?</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Register')}
+          >
+            <Text style={styles.registerTextLink}> Sign up</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -106,23 +114,27 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   registerText: {
-    fontSize: 12,
+    fontSize: 14,
+    color: Colors.DARK_GRAY,
   },
   registerTextLink: {
-    fontSize: 12,
-    color: 'white',
-    textDecorationLine: 'underline',
+    fontSize: 14,
+    color: 'blue',
   },
   error: {
     color: 'red',
   },
-  mr18: {
-    marginRight: 16,
+  registerView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
-  mt4: {
+  mt16: {
     marginTop: 16,
   },
-  mt5: {
+  mr16: {
+    marginRight: 16,
+  },
+  mt22: {
     marginTop: 22,
   },
   mt30: {
