@@ -1,49 +1,82 @@
 import React, { useState } from 'react';
+
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator, StyleSheet, Text, TextInput, View, Alert } from 'react-native';
 import { RadioButton } from 'react-native-paper';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
+import { z, ZodError } from 'zod';
+
 import { instance as axiosInstance } from '../helpers/axiosConfig';
 import getErrorMessage from '../helpers/getErrorMessage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../Root';
 
-type RegisterFormData = {
-  email: string;
-  password: string;
-  password_confirmation: string;
-  name: string;
-  role: 'PATIENT' | 'DOCTOR';
-};
+
+const schema = z.object({
+  name: z.string().min(3, { message: "This name is too short" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  password: z.string().min(6, { message: "This password is too short" }),
+  password_confirmation: z.string(),
+  role: z.enum(['DOCTOR', 'PATIENT']).default('PATIENT'),
+})
+.refine((data) => data.password === data.password_confirmation, {
+    message: "Passwords don't match",
+    path: ["password_confirmation"],
+});
+
+type RegisterFormData = z.infer<typeof schema>;
 
 export default function RegisterScreen({ navigation }: NativeStackScreenProps<AuthStackParamList, 'Register'>) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
   const {
     control,
     handleSubmit,
     formState: { errors },
-    watch, 
+    setError,
   } = useForm<RegisterFormData>();
 
-  const password = watch('password');
+  function validateData(data: RegisterFormData): boolean {
+    try {
+      schema.parse(data);
+      return true
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const fieldErrors = error.flatten().fieldErrors;
+        for (let key in fieldErrors) {
+          const message = String(fieldErrors[key]);
+          const field = key as keyof RegisterFormData;
+          setError(field, { type: 'focus', message: message });
+        }
+      } else {
+          setError('root', { type: 'focus', message: 'An error occured validating the form.' });
+      }
+      return false
+    }
+  }
 
-  const onSubmit = (data: RegisterFormData) => {
+  function sendData(data: RegisterFormData){
     setIsLoading(true);
     axiosInstance
       .post('/signup', data)
       .then(response => {
         Alert.alert('User created! Please login.');
         navigation.navigate('Login');
-        setIsLoading(false);
-        setError(null);
+        setApiError(null);
       })
       .catch(error => {
         console.log(error.response);
         const message = getErrorMessage(error);
-        setError(message);
+        setApiError(message);
+      }).finally(() => {
         setIsLoading(false);
       });
+  }
+
+  const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
+    if (validateData(data)) {
+      sendData(data);
+    }
   };
 
   return (
@@ -54,11 +87,11 @@ export default function RegisterScreen({ navigation }: NativeStackScreenProps<Au
           <Text style={[styles.subtitle, styles.mt22]}>Sign up to access unique features</Text>
         </View>
         <View style={styles.mt30}>
-        {error && <Text style={styles.error}>{error}</Text>}
+        {apiError && <Text style={styles.error}>{apiError}</Text>}
+        {errors.root && <Text style={styles.error}>{errors.root.message}</Text>}
           <Controller
             control={control}
             name="name"
-            rules={{ required: true }}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextInput
@@ -69,11 +102,10 @@ export default function RegisterScreen({ navigation }: NativeStackScreenProps<Au
               />
             )}
           />
-          {errors.name && <Text style={styles.error}>This field is required</Text>}
+          {errors.name && <Text style={styles.error}>{errors.name.message}</Text>}
           <Controller
             control={control}
             name="email"
-            rules={{ required: true, pattern: /^\S+@\S+$/i }}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextInput
@@ -86,16 +118,10 @@ export default function RegisterScreen({ navigation }: NativeStackScreenProps<Au
               />
             )}
           />
-          {errors.email && errors.email.type === 'required' && (
-            <Text style={styles.error}>This field is required</Text>
-          )}
-          {errors.email && errors.email.type === 'pattern' && (
-            <Text style={styles.error}>Invalid email address</Text>
-          )}
+          {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
           <Controller
             control={control}
             name="password"
-            rules={{ required: true, minLength: 6 }}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextInput
@@ -107,19 +133,10 @@ export default function RegisterScreen({ navigation }: NativeStackScreenProps<Au
               />
             )}
           />
-          {errors.password && errors.password.type === 'required' && (
-            <Text style={styles.error}>This field is required</Text>
-          )}
-          {errors.password && errors.password.type === 'minLength' && (
-            <Text style={styles.error}>The password is too short</Text>
-          )}
+          {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
           <Controller
             control={control}
             name="password_confirmation"
-            rules={{
-              required: true,
-              validate: (value) => value === password || 'Passwords must match',
-            }}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextInput
@@ -131,11 +148,11 @@ export default function RegisterScreen({ navigation }: NativeStackScreenProps<Au
               />
             )}
           />
-          {errors.password_confirmation && <Text style={styles.error}>The passwords must match</Text>}
+          {errors.password_confirmation && <Text style={styles.error}>{errors.password_confirmation.message}</Text>}
           <Controller
             control={control}
             name="role"
-            defaultValue="DOCTOR"
+            defaultValue="PATIENT"
             render={({ field: { onChange, value } }) => (
               <RadioButton.Group
                 onValueChange={onChange}
@@ -143,12 +160,12 @@ export default function RegisterScreen({ navigation }: NativeStackScreenProps<Au
               >
                 <View style={[styles.radioButtonsContainer, styles.mt5]}>
                   <View style={styles.radioButtonContainer}>
-                    <RadioButton value="DOCTOR" uncheckedColor="red" />
-                    <Text >Doctor</Text>
+                    <RadioButton value="PATIENT" uncheckedColor="red" />
+                    <Text>Patient</Text>
                   </View>
                   <View style={styles.radioButtonContainer}>
-                    <RadioButton value="PATIENT" />
-                    <Text >Patient</Text>
+                    <RadioButton value="DOCTOR" />
+                    <Text>Doctor</Text>
                   </View>
                 </View>
               </RadioButton.Group>
