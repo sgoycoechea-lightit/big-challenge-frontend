@@ -4,7 +4,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator, StyleSheet, Text, TextInput, View, Alert } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { instance as axiosInstance } from '../helpers/axiosConfig';
 import getErrorMessage from '../helpers/getErrorMessage';
@@ -33,29 +34,12 @@ export default function RegisterScreen({ navigation }: NativeStackScreenProps<Au
     control,
     handleSubmit,
     formState: { errors },
-    setError,
-  } = useForm<RegisterFormData>();
+    
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(schema),
+  });
 
-  function validateData(data: RegisterFormData): boolean {
-    try {
-      schema.parse(data);
-      return true
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const fieldErrors = error.flatten().fieldErrors;
-        for (let key in fieldErrors) {
-          const message = String(fieldErrors[key]);
-          const field = key as keyof RegisterFormData;
-          setError(field, { type: 'focus', message: message });
-        }
-      } else {
-          setError('root', { type: 'focus', message: 'An error occured validating the form.' });
-      }
-      return false
-    }
-  }
-
-  function sendData(data: RegisterFormData){
+  const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
     setIsLoading(true);
     axiosInstance
       .post('/signup', data)
@@ -71,12 +55,6 @@ export default function RegisterScreen({ navigation }: NativeStackScreenProps<Au
       }).finally(() => {
         setIsLoading(false);
       });
-  }
-
-  const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
-    if (validateData(data)) {
-      sendData(data);
-    }
   };
 
   return (

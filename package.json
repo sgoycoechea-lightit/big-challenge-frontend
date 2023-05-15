@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.1.0",
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/native-stack": "^6.9.12",
     "@react-navigation/stack": "^6.3.16",
