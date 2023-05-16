@@ -8,11 +8,21 @@ type LoginResponse = {
   data: User,
 }
 
+export enum UserRole {
+  DOCTOR = 'DOCTOR',
+  PATIENT = 'PATIENT',
+}
+
 export type User = {
   id: number;
   name: string;
   email: string;
   token: string;
+  role: UserRole;
+  phoneNumber: string | null;
+  weight: number | null;
+  height: number | null;
+  otherInfo: string | null;
 }
 
 export type AuthContextType = {
@@ -22,6 +32,7 @@ export type AuthContextType = {
   isLoading: boolean;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  isUserInfoComplete: () => boolean;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -31,6 +42,7 @@ export const AuthContext = createContext<AuthContextType>({
   isLoading: false,
   user: null,
   setUser: () => {},
+  isUserInfoComplete: () => { return false },
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -52,6 +64,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           id: response.data.data.id,
           name: response.data.data.name,
           email: response.data.data.email,
+          role: UserRole[response.data.data.role],
+          phoneNumber: response.data.data.phoneNumber ?? null,
+          weight: response.data.data.weight ?? null,
+          height: response.data.data.height ?? null,
+          otherInfo: response.data.data.otherInfo ?? null,
         };
 
         setUser(userResponse);
@@ -87,6 +104,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
   };
 
+  const isUserInfoComplete = () => {
+    if (!user) { return false }
+    return user.role === UserRole.DOCTOR || (
+      user.phoneNumber !== null &&
+      user.weight !== null &&
+      user.height !== null
+    );
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -96,6 +122,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isLoading,
         login,
         logout,
+        isUserInfoComplete,
       }}
     >
       {children}

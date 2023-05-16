@@ -7,15 +7,19 @@ import { DrawerContentScrollView, DrawerItemList, createDrawerNavigator, DrawerC
 import * as SecureStore from 'expo-secure-store';
 import 'react-native-gesture-handler';
 
-import { AuthContext, AuthContextType } from './context/AuthProvider';
+import { AuthContext, AuthContextType, UserRole } from './context/AuthProvider';
 import { setAxiosToken } from './helpers/axiosConfig';
 import HomeScreen from './screens/Home';
 import LoginScreen from './screens/Login';
 import RegisterScreen from './screens/Register';
+import PatientInfoScreen from './screens/PatientInfo';
+import NewSubmissionScreen from './screens/NewSubmission';
+import TaskHistoryScreen from './screens/TaskHistory';
 import Colors from './constants/Colors';
 
 export type HomeStackParamList = {
   Home: undefined;
+  PatientInfo: undefined;
 };
 
 export type AuthStackParamList = {
@@ -25,6 +29,9 @@ export type AuthStackParamList = {
 
 export type DrawerParamList = {
   HomeStack: undefined;
+  PatientInfo: undefined;
+  NewSubmission: undefined;
+  TaskHistory: undefined;
 };
 
 const HomeStack = createStackNavigator<HomeStackParamList>();
@@ -90,7 +97,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
 export default function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { user, setUser } = useContext<AuthContextType>(AuthContext);
+  const { user, setUser, isUserInfoComplete } = useContext<AuthContextType>(AuthContext);
 
   useEffect(() => {
     SecureStore.getItemAsync('user')
@@ -125,10 +132,36 @@ export default function App() {
             screenOptions={{
               drawerActiveBackgroundColor: Colors.BLUEISH_GRAY_ACTIVE,
               drawerActiveTintColor: 'white',
-              title: 'Home',
             }}
           >
-            <Drawer.Screen name="HomeStack" component={HomeStackNavigator} />
+            {(user.role === UserRole.DOCTOR || isUserInfoComplete()) && (
+              <Drawer.Screen 
+                name="HomeStack"
+                component={HomeStackNavigator}
+                options={{ title: 'Home' }}
+              />
+            )}
+            {user.role === UserRole.PATIENT && !isUserInfoComplete() && (
+              <Drawer.Screen
+                name="PatientInfo"
+                component={PatientInfoScreen}
+                options={{ title: 'Patient information' }}
+              />
+            )}
+            {user.role === UserRole.PATIENT && isUserInfoComplete() && (
+              <Drawer.Screen
+                name="NewSubmission"
+                component={NewSubmissionScreen}
+                options={{ title: 'New submission' }}
+              />
+            )}
+            {user.role === UserRole.DOCTOR && (
+              <Drawer.Screen
+                name="TaskHistory"
+                component={TaskHistoryScreen}
+                options={{ title: 'Task history' }}
+              />
+            )}
           </Drawer.Navigator>
         </NavigationContainer>
       ) : (
