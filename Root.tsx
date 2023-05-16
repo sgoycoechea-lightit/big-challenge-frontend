@@ -76,10 +76,12 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   
   return (
     <DrawerContentScrollView
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={styles.drawerContentContainer}
       scrollEnabled={false}
     >
-      <DrawerItemList {...props} />
+      <View style={styles.drawerItemListContainer}>
+        <DrawerItemList {...props} />
+      </View>
       <View style={styles.logoutContainer}>
         <View style={styles.userInitialView}>
           <Text style={styles.userInitial}>{user?.name[0]}</Text>
@@ -121,7 +123,7 @@ export default function App() {
       </View>
     );
   }
-  
+
   return (
     <>
       {user ? (
@@ -130,8 +132,10 @@ export default function App() {
             initialRouteName="HomeStack"
             drawerContent={(props) => <DrawerContent {...props} />}
             screenOptions={{
-              drawerActiveBackgroundColor: Colors.BLUEISH_GRAY_ACTIVE,
-              drawerActiveTintColor: 'white',
+              drawerActiveBackgroundColor: Colors.DARK_BLUE_ACTIVE,
+              drawerActiveTintColor: Colors.WHITE,
+              drawerInactiveTintColor: Colors.LIGHT_GRAY,
+              drawerInactiveBackgroundColor: Colors.DARK_BLUE_INACTIVE,
             }}
           >
             {(user.role === UserRole.DOCTOR || isUserInfoComplete()) && (
@@ -141,18 +145,18 @@ export default function App() {
                 options={{ title: 'Home' }}
               />
             )}
-            {user.role === UserRole.PATIENT && !isUserInfoComplete() && (
-              <Drawer.Screen
-                name="PatientInfo"
-                component={PatientInfoScreen}
-                options={{ title: 'Patient information' }}
-              />
-            )}
             {user.role === UserRole.PATIENT && isUserInfoComplete() && (
               <Drawer.Screen
                 name="NewSubmission"
                 component={NewSubmissionScreen}
                 options={{ title: 'New submission' }}
+              />
+            )}
+            {user.role === UserRole.PATIENT && (
+              <Drawer.Screen
+                name="PatientInfo"
+                component={PatientInfoScreen}
+                options={{ title: 'Patient information' }}
               />
             )}
             {user.role === UserRole.DOCTOR && (
@@ -179,15 +183,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  contentContainer: {
+  drawerContentContainer: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
     paddingBottom: 50,
-    backgroundColor: Colors.BLUEISH_GRAY,
+    backgroundColor: Colors.DARK_BLUE,
+  },
+  drawerItemListContainer: {
+    flex: 1,
   },
   logoutContainer: {
-    backgroundColor: Colors.BLUEISH_GRAY_ACTIVE,
+    backgroundColor: Colors.DARK_BLUE_ACTIVE,
     height: 68,
     alignItems: 'center',
     flexDirection: 'row',
@@ -202,14 +209,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userInitial: {
-    color: 'white',
+    color: Colors.WHITE,
     fontSize: 16,
   },
   userNameAndLogoutView: {
     paddingLeft: 12,
   },
   userName: {
-    color: 'white',
+    color: Colors.WHITE,
     fontSize: 14,
   },
   logout: {

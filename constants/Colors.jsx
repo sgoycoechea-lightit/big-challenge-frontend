@@ -1,9 +1,12 @@
 
 export default {
     BLUE: '#2563EB',
-    BLUEISH_GRAY: '#1F2937',
-    BLUEISH_GRAY_ACTIVE: '#374151',
+    DARK_BLUE: '#1F2937',
+    DARK_BLUE_ACTIVE: '#374151',
+    DARK_BLUE_INACTIVE: '#263040',
     TEXT_GRAY: '#D1D5DB',
+    TEXT_GRAY_2: '#374151',
     LIGHT_GRAY: '#9CA3AF',
     DARK_GRAY: '#6B7280',
+    WHITE: '#FFFFFF',
 }

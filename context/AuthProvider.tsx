@@ -19,10 +19,10 @@ export type User = {
   email: string;
   token: string;
   role: UserRole;
-  phoneNumber: string | null;
+  phone_number: string | null;
   weight: number | null;
   height: number | null;
-  otherInfo: string | null;
+  other_information: string | null;
 }
 
 export type AuthContextType = {
@@ -60,15 +60,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       })
       .then(response => {
         const userResponse: User = {
-          token: response.data.token,
-          id: response.data.data.id,
-          name: response.data.data.name,
-          email: response.data.data.email,
-          role: UserRole[response.data.data.role],
-          phoneNumber: response.data.data.phoneNumber ?? null,
-          weight: response.data.data.weight ?? null,
-          height: response.data.data.height ?? null,
-          otherInfo: response.data.data.otherInfo ?? null,
+          ...response.data.data,
+          token: response.data.token
         };
 
         setUser(userResponse);
@@ -105,12 +98,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const isUserInfoComplete = () => {
-    if (!user) { return false }
-    return user.role === UserRole.DOCTOR || (
-      user.phoneNumber !== null &&
-      user.weight !== null &&
-      user.height !== null
-    );
+    if (!user) return false;
+    if (user.role !== UserRole.PATIENT) return true;
+    return (user.phone_number !== null && user.phone_number !== undefined &&
+            user.weight !== null && user.weight !== undefined &&
+            user.height !== null && user.height !== undefined);
   }
 
   return (
