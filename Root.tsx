@@ -19,6 +19,7 @@ import Colors from './constants/Colors';
 
 export type HomeStackParamList = {
   Home: undefined;
+  PatientInfo: undefined;
 };
 
 export type AuthStackParamList = {
