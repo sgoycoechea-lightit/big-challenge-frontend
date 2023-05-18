@@ -12,51 +12,35 @@ import SubmissionStatus from '../types/SubmissionStatus';
 import Colors from '../constants/Colors';
 
 
-function getStatusStyle(status: SubmissionStatus) {
-  switch (status) {
-    case SubmissionStatus.Pending:
-      return styles.pending;
-    case SubmissionStatus.InProgress:
-      return styles.inProgress;
-    case SubmissionStatus.Done:
-      return styles.done;
-  }
-}
-
-function getStatusName(status: SubmissionStatus) {
-  switch (status) {
-    case SubmissionStatus.Pending:
-      return 'Pending';
-    case SubmissionStatus.InProgress:
-      return 'In Progress';
-    case SubmissionStatus.Done:
-      return 'Done';
-  }
-}
-
-function getStatusTextStyle(status: SubmissionStatus) {
-  switch (status) {
-    case SubmissionStatus.Pending:
-      return styles.pendingText;
-    case SubmissionStatus.InProgress:
-      return styles.inProgressText;
-    case SubmissionStatus.Done:
-      return styles.doneText;
-  }
-}
-
 export default function SubmissionTableItem({ item: submission }: { item: Submission }) {
-  const statusStyle = getStatusStyle(submission.status);
-  const statusTextStyle = getStatusTextStyle(submission.status);
-  const statusName = getStatusName(submission.status);
+  const statusStyles = {
+    [SubmissionStatus.Pending]: styles.pending,
+    [SubmissionStatus.InProgress]: styles.inProgress,
+    [SubmissionStatus.Done]: styles.done,
+  };
+  
+  const statusTextStyles = {
+    [SubmissionStatus.Pending]: styles.pendingText,
+    [SubmissionStatus.InProgress]: styles.inProgressText,
+    [SubmissionStatus.Done]: styles.doneText,
+  }
+  
+  const statusNames = {
+    [SubmissionStatus.Pending]: 'Pending',
+    [SubmissionStatus.InProgress]: 'In Progress',
+    [SubmissionStatus.Done]: 'Done',
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
         <Text style={styles.title} numberOfLines={1}>
           {submission.title}
         </Text>
-        <View style={[styles.status, statusStyle]}>
-          <Text style={statusTextStyle}>{statusName}</Text>
+        <View style={[styles.status, statusStyles[submission.status]]}>
+          <Text style={statusTextStyles[submission.status]}>
+            {statusNames[submission.status]}
+          </Text>
         </View>
       </View>
       <View style={styles.rowContainer}>
