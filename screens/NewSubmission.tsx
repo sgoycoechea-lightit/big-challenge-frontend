@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ActivityIndicator, StyleSheet, Text, TextInput, View, Alert } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,6 +32,7 @@ export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<Dr
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
     
   } = useForm<NewSubmissionFormData>({
@@ -44,7 +45,11 @@ export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<Dr
       .post('/submissions', data)
       .then(response => {
         setApiError(null);
-        navigation.navigate('HomeStack');
+        navigation.navigate('HomeStack', {
+          screen: 'Home',
+          params: { newSubmissionAdded: true },
+        });
+        reset();
       })
       .catch(error => {
         console.log(error.response);

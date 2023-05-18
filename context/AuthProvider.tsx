@@ -2,27 +2,13 @@ import React, { createContext, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { instance as axiosInstance, setAxiosToken } from '../helpers/axiosConfig';
 import getErrorMessage from '../helpers/getErrorMessage';
+import User from '../types/User';
+import UserRole from '../types/UserRole';
+
 
 type LoginResponse = {
   token: string,
   data: User,
-}
-
-export enum UserRole {
-  DOCTOR = 'DOCTOR',
-  PATIENT = 'PATIENT',
-}
-
-export type User = {
-  id: number;
-  name: string;
-  email: string;
-  token: string;
-  role: UserRole;
-  phone_number: string | null;
-  weight: number | null;
-  height: number | null;
-  other_information: string | null;
 }
 
 export type AuthContextType = {
@@ -64,10 +50,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           token: response.data.token
         };
 
-        setUser(userResponse);
-        setError(null);
-        SecureStore.setItemAsync('user', JSON.stringify(userResponse));
         setAxiosToken(userResponse.token);
+        SecureStore.setItemAsync('user', JSON.stringify(userResponse));
+        setError(null);
+        setUser(userResponse);
       })
       .catch(error => {
         console.log(error.response);

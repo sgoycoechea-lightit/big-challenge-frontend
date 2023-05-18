@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ActivityIndicator, StyleSheet, Text, TextInput, View, Alert } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,7 +57,7 @@ export default function PatientInfoScreen({ navigation }: DrawerScreenProps<Draw
           ...user,
           ...response.data.data,
         });
-        navigation.navigate('HomeStack');
+        navigation.navigate('HomeStack', { screen: 'Home' });
       })
       .catch(error => {
         console.log(error.response);
