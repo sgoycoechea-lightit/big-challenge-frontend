@@ -8,11 +8,21 @@ type LoginResponse = {
   data: User,
 }
 
+export enum UserRole {
+  DOCTOR = 'DOCTOR',
+  PATIENT = 'PATIENT',
+}
+
 export type User = {
   id: number;
   name: string;
   email: string;
   token: string;
+  role: UserRole;
+  phone_number: string | null;
+  weight: number | null;
+  height: number | null;
+  other_information: string | null;
 }
 
 export type AuthContextType = {
@@ -22,6 +32,7 @@ export type AuthContextType = {
   isLoading: boolean;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  isUserInfoComplete: () => boolean;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -31,6 +42,7 @@ export const AuthContext = createContext<AuthContextType>({
   isLoading: false,
   user: null,
   setUser: () => {},
+  isUserInfoComplete: () => { return false },
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -48,10 +60,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       })
       .then(response => {
         const userResponse: User = {
-          token: response.data.token,
-          id: response.data.data.id,
-          name: response.data.data.name,
-          email: response.data.data.email,
+          ...response.data.data,
+          token: response.data.token
         };
 
         setUser(userResponse);
@@ -87,6 +97,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
   };
 
+  const isUserInfoComplete = () => {
+    if (!user) return false;
+    if (user.role !== UserRole.PATIENT) return true;
+    return (user.phone_number !== null && user.phone_number !== undefined &&
+            user.weight !== null && user.weight !== undefined &&
+            user.height !== null && user.height !== undefined);
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -96,6 +114,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isLoading,
         login,
         logout,
+        isUserInfoComplete,
       }}
     >
       {children}

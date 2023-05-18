@@ -1,14 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-
-export default function HomeScreen() {
+export default function NewSubmissionScreen() {
   return (
     <View style={styles.centeredView}>
-      <Text>Home</Text>
+      <Text>New submission</Text>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   centeredView: {

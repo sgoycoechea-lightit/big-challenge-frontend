@@ -53,8 +53,7 @@ export default function LoginScreen({ navigation }: NativeStackScreenProps<AuthS
         >
           {isLoading && (
             <ActivityIndicator
-              style={styles.mr16}
-              size="small"
+              style={styles.activityIndicator}
               color="white"
             />
           )}
@@ -76,7 +75,7 @@ export default function LoginScreen({ navigation }: NativeStackScreenProps<AuthS
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: Colors.WHITE,
     alignItems: 'center',
     paddingTop: 150,
   },
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   inputBox: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.WHITE,
     borderRadius: 5,
     borderColor: 'gray',
     borderWidth: 1,
@@ -111,7 +110,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   loginButtonText: {
-    color: 'white',
+    color: Colors.WHITE,
+  },
+  activityIndicator: {
+    marginRight: 18,
+    height: 10,
+    width: 10,
   },
   registerText: {
     fontSize: 14,
