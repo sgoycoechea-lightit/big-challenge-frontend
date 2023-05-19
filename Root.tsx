@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 
-import { ActivityIndicator, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { DrawerContentScrollView, DrawerItemList, createDrawerNavigator, DrawerContentComponentProps } from '@react-navigation/drawer';
 import * as SecureStore from 'expo-secure-store';
 import 'react-native-gesture-handler';
 
-import { AuthContext, AuthContextType, UserRole } from './context/AuthProvider';
+import { AuthContext, AuthContextType } from './context/AuthProvider';
 import { setAxiosToken } from './helpers/axiosConfig';
 import HomeScreen from './screens/Home';
 import LoginScreen from './screens/Login';
@@ -16,9 +16,12 @@ import PatientInfoScreen from './screens/PatientInfo';
 import NewSubmissionScreen from './screens/NewSubmission';
 import TaskHistoryScreen from './screens/TaskHistory';
 import Colors from './constants/Colors';
+import UserRole from './types/UserRole';
 
 export type HomeStackParamList = {
-  Home: undefined;
+  Home: {
+    newSubmissionAdded?: boolean;
+  },
 };
 
 export type AuthStackParamList = {
@@ -27,7 +30,10 @@ export type AuthStackParamList = {
 };
 
 export type DrawerParamList = {
-  HomeStack: undefined;
+  HomeStack: {
+    screen: keyof HomeStackParamList;
+    params?: HomeStackParamList[keyof HomeStackParamList];
+  }
   PatientInfo: undefined;
   NewSubmission: undefined;
   TaskHistory: undefined;
@@ -97,9 +103,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 }
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { user, setUser, isUserInfoComplete } = useContext<AuthContextType>(AuthContext);
-
+  
   useEffect(() => {
     SecureStore.getItemAsync('user')
       .then(userString => {
@@ -111,17 +116,8 @@ export default function App() {
       })
       .catch(err => {
         console.log(err);
-      })
-      .finally(() => setIsLoading(false));
-   }, []);
-
-  if (isLoading) {
-    return (
-      <View style={styles.centeredView}>
-        <ActivityIndicator size="large" color="gray" />
-      </View>
-    );
-  }
+      })},
+   []);
 
   return (
     <>
