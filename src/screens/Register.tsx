@@ -15,7 +15,7 @@ import Colors from '../constants/Colors';
 import InputField from '../components/InputField';
 
 //
-// This screen is implemented using react-hook-form and zod.
+// This screen is implemented using react-hook-form, zod and nativewind.
 //
 
 const schema = z.object({
@@ -169,13 +169,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'center',
   },
-  inputBox: {
-    backgroundColor: Colors.WHITE,
-    borderRadius: 5,
-    borderColor: 'gray',
-    borderWidth: 1,
-    padding: 10,
-  },
   loginButton: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -222,9 +215,6 @@ const styles = StyleSheet.create({
   },
   mt16: {
     marginTop: 16,
-  },
-  mr18: {
-    marginRight: 18,
   },
   mt5: {
     marginTop: 5,

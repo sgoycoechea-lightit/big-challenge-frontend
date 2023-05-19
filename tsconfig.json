@@ -3,7 +3,5 @@
   "compilerOptions": {
     "strict": true
   },
-  "include": [
-    "screens/**/*"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
 }
