@@ -85,10 +85,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const isUserInfoComplete = () => {
     if (!user) return false;
-    if (user.role !== UserRole.PATIENT) return true;
-    return (user.phone_number !== null && user.phone_number !== undefined &&
-            user.weight !== null && user.weight !== undefined &&
-            user.height !== null && user.height !== undefined);
+    const { role, phone_number, weight, height, } = user;
+
+    if (role !== UserRole.PATIENT) return true;
+    return (phone_number !== null && phone_number !== undefined &&
+            weight !== null && weight !== undefined &&
+            height !== null && height !== undefined);
   }
 
   return (
