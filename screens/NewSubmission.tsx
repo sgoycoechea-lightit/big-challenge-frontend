@@ -27,8 +27,8 @@ const schema = z.object({
 type NewSubmissionFormData = z.infer<typeof schema>;
 
 export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<DrawerParamList, 'NewSubmission'>) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     control,
     handleSubmit,

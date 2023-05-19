@@ -29,8 +29,8 @@ const schema = z.object({
 type RegisterFormData = z.infer<typeof schema>;
 
 export default function RegisterScreen({ navigation }: NativeStackScreenProps<AuthStackParamList, 'Register'>) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     control,
     handleSubmit,

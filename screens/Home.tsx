@@ -22,11 +22,11 @@ type GetSubmissionsResponse = {
 
 export default function HomeScreen({ route, navigation }: StackScreenProps<HomeStackParamList, 'Home'>) {
   const [data, setData] = useState<Submission[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(1);
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [isFetching, setIsFetching] = useState<boolean>(false);
-  const [didFetchAllPages, setDidFetchAllPages] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [didFetchAllPages, setDidFetchAllPages] = useState(false);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     fetchSubmissions();

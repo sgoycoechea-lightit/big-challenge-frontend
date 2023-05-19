@@ -14,9 +14,9 @@ import Colors from '../constants/Colors';
 
 export default function LoginScreen({ navigation }: NativeStackScreenProps<AuthStackParamList, 'Login'>
 ) {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const { login, error, isLoading } = useContext<AuthContextType>(AuthContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login, error, isLoading } = useContext(AuthContext);
 
   return (
     <View style={styles.container}>

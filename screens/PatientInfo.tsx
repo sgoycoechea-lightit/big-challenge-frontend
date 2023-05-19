@@ -35,9 +35,9 @@ const schema = z.object({
 type PatientInfoFormData = z.infer<typeof schema>;
 
 export default function PatientInfoScreen({ navigation }: DrawerScreenProps<DrawerParamList, 'PatientInfo'>) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { user, setUser, isUserInfoComplete } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const { user, setUser, isUserInfoComplete } = useContext<AuthContextType>(AuthContext);
   const {
     control,
     handleSubmit,
