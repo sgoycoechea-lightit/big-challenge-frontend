@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ActivityIndicator, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { useForm, type SubmitHandler, FieldValues } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -11,7 +11,8 @@ import getErrorMessage from '../helpers/getErrorMessage';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { DrawerParamList } from '../Root';
 import Colors from '../constants/Colors';
-import { AuthContext, AuthContextType } from '../context/AuthProvider';
+import { AuthContext } from '../context/AuthProvider';
+import InputField from '../components/InputField';
 
 
 const schema = z.object({
@@ -75,67 +76,40 @@ export default function PatientInfoScreen({ navigation }: DrawerScreenProps<Draw
         <View style={styles.mt20}>
           {apiError && <Text style={styles.error}>{apiError}</Text>}
           {errors.root && <Text style={styles.error}>{errors.root.message}</Text>}
-          <Text style={styles.inputTitle} >Phone number</Text>
-          <Controller
-            control={control}
-            name="phone_number"
+          <InputField
+            error = {errors.phone_number}
+            control = {control}
+            name = 'phone_number'
+            placeholder = 'Phone number'
+            inputTitle = 'Phone number'
             defaultValue={user?.phone_number?.toString() ?? ""}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                style={styles.inputBox}
-                value={value}
-                placeholder="Phone number"
-              />
-            )}
           />
-          {errors.phone_number && <Text style={styles.error}>{errors.phone_number.message}</Text>}
-          <Text style={styles.inputTitle} >Weight</Text>
-          <Controller
-            control={control}
-            name="weight"
+          <InputField
+            error = {errors.weight}
+            control = {control}
+            name = 'weight'
+            placeholder = 'Weight'
+            inputTitle = 'Weight'
             defaultValue={user?.weight?.toString() ?? ""}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                style={styles.inputBox}
-                value={value.toString()}
-                placeholder="Weight"
-              />
-            )}
           />
-          {errors.weight && <Text style={styles.error}>{errors.weight.message}</Text>}
-          <Text style={styles.inputTitle} >Height</Text>
-          <Controller
-            control={control}
-            name="height"
+          <InputField
+            error = {errors.height}
+            control = {control}
+            name = 'height'
+            placeholder = 'Height'
+            inputTitle = 'Height'
             defaultValue={user?.height?.toString() ?? ""}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                style={styles.inputBox}
-                value={value.toString()}
-                placeholder="Height"
-              />
-            )}
           />
-          {errors.height && <Text style={styles.error}>{errors.height.message}</Text>}
-          <Text style={styles.inputTitle} >Other information</Text>
-          <Controller
-            control={control}
-            name="other_information"
+          <InputField
+            error = {errors.other_information}
+            control = {control}
+            name = 'other_information'
+            placeholder = 'Other information'
+            inputTitle = 'Other information'
             defaultValue={user?.other_information ?? ""}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                multiline={true}
-                style={[styles.inputBox, styles.h120]}
-                value={value}
-                placeholder="Other info"
-              />
-            )}
+            multiline
+            bigTextBox
           />
-          {errors.other_information && <Text style={styles.error}>{errors.other_information.message}</Text>}
         </View>
         <TouchableOpacity
           onPress={handleSubmit(onSubmit)}
@@ -167,26 +141,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'center',
   },
-  title: {
-    fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  inputTitle: {
-    marginTop: 16,
-    marginBottom: 6,
-    color: Colors.TEXT_GRAY_2,
-    fontWeight: '400',
-    fontSize: 12,
-  },
-  inputBox: {
-    backgroundColor: Colors.WHITE,
-    borderRadius: 5,
-    borderColor: 'gray',
-    borderWidth: 1,
-    padding: 10,
-  },
   button: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -209,9 +163,6 @@ const styles = StyleSheet.create({
   mt16: {
     marginTop: 16,
   },
-  mr18: {
-    marginRight: 18,
-  },
   mt22: {
     marginTop: 22,
   },
@@ -220,8 +171,5 @@ const styles = StyleSheet.create({
   },
   w260: {
     width: 260,
-  },
-  h120: {
-    height: 120,
   },
 });

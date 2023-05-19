@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ActivityIndicator, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -11,6 +11,7 @@ import getErrorMessage from '../helpers/getErrorMessage';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { DrawerParamList } from '../Root';
 import Colors from '../constants/Colors';
+import InputField from '../components/InputField';
 
 
 const schema = z.object({
@@ -66,37 +67,22 @@ export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<Dr
         <View style={styles.mt20}>
           {apiError && <Text style={styles.error}>{apiError}</Text>}
           {errors.root && <Text style={styles.error}>{errors.root.message}</Text>}
-          <Text style={styles.inputTitle} >Title</Text>
-          <Controller
-            control={control}
-            name="title"
-            defaultValue=""
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                style={styles.inputBox}
-                value={value}
-                placeholder="Title"
-              />
-            )}
+          <InputField
+            error = {errors.title}
+            control = {control}
+            name = 'title'
+            placeholder = 'Title'
+            inputTitle = 'Title'
           />
-          {errors.title && <Text style={styles.error}>{errors.title.message}</Text>}
-          <Text style={styles.inputTitle} >Symptoms</Text>
-          <Controller
-            control={control}
-            name="symptoms"
-            defaultValue=""
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                multiline={true}
-                style={[styles.inputBox, styles.h120]}
-                value={value}
-                placeholder="Symptoms"
-              />
-            )}
+          <InputField
+            error = {errors.symptoms}
+            control = {control}
+            name = 'symptoms'
+            placeholder = 'Symptoms'
+            inputTitle = 'Symptoms'
+            multiline
+            bigTextBox
           />
-          {errors.symptoms && <Text style={styles.error}>{errors.symptoms.message}</Text>}
         </View>
         <TouchableOpacity
           onPress={handleSubmit(onSubmit)}
@@ -122,32 +108,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 15,
   },
-  subtitle: {
-    fontWeight: '400',
-    fontSize: 13,
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  title: {
-    fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  inputTitle: {
-    marginTop: 16,
-    marginBottom: 6,
-    color: Colors.TEXT_GRAY_2,
-    fontWeight: '400',
-    fontSize: 12,
-  },
-  inputBox: {
-    backgroundColor: Colors.WHITE,
-    borderRadius: 5,
-    borderColor: 'gray',
-    borderWidth: 1,
-    padding: 10,
-  },
   button: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -170,16 +130,10 @@ const styles = StyleSheet.create({
   mt16: {
     marginTop: 16,
   },
-  mt22: {
-    marginTop: 22,
-  },
   mt20: {
     marginTop: 20,
   },
   w260: {
     width: 260,
-  },
-  h120: {
-    height: 120,
   },
 });
