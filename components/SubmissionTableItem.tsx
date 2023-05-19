@@ -5,12 +5,10 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import moment from 'moment';
-
 import Submission from '../types/Submission';
 import SubmissionStatus from '../types/SubmissionStatus';
 import Colors from '../constants/Colors';
-
+import { formatDateFromString } from '../helpers/DateFormatter';
 
 export default function SubmissionTableItem({ item: submission }: { item: Submission }) {
   const statusStyles = {
@@ -48,7 +46,7 @@ export default function SubmissionTableItem({ item: submission }: { item: Submis
           {submission.doctor?.name ?? "No doctor assigned"}
         </Text>
         <Text style={styles.dateCreated}>
-          {moment(submission.created_at).format('M/D/YY')}
+          {formatDateFromString(submission.created_at)}
         </Text>
       </View>
     </View>

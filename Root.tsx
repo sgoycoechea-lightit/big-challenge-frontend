@@ -21,7 +21,7 @@ import UserRole from './types/UserRole';
 export type HomeStackParamList = {
   Home: {
     newSubmissionAdded?: boolean;
-  }
+  },
 };
 
 export type AuthStackParamList = {
