@@ -4,6 +4,7 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
+  Text,
 } from 'react-native';
 
 
@@ -87,6 +88,11 @@ export default function HomeScreen({ route, navigation }: StackScreenProps<HomeS
       {isLoading ? (
         <ActivityIndicator style={styles.mt8} size="large" color="gray" />
       ) : (
+        data.length === 0 ? (
+          <View style={styles.alignCenter}>
+            <Text style={styles.emptyText}>Please create a new submission to start using the app!</Text>
+          </View>
+        ) : (
         <FlatList
           data={data}
           renderItem={props => <SubmissionTableItem {...props} />}
@@ -102,7 +108,7 @@ export default function HomeScreen({ route, navigation }: StackScreenProps<HomeS
           onEndReached={handleEnd}
           onEndReachedThreshold={0}
         />
-      )}
+      ))}
     </View>
   );
 }
@@ -111,10 +117,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    justifyContent: 'center',
   },
   separator: {
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
+  },
+  alignCenter: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 60,
+  },
+  emptyText: {
+    fontWeight: '400',
+    fontSize: 15,
+    lineHeight: 24,
+    textAlign: 'center',
   },
   mt8: {
     marginTop: 8,
