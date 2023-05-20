@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,9 +10,12 @@ import { instance as axiosInstance } from '../helpers/axiosConfig';
 import getErrorMessage from '../helpers/getErrorMessage';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { DrawerParamList } from '../Root';
-import Colors from '../constants/Colors';
 import InputField from '../components/InputField';
 
+
+//
+// This screen is implemented using react-hook-form, zod and nativewind.
+//
 
 const schema = z.object({
   title: z
@@ -62,11 +65,11 @@ export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<Dr
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.w260}>        
-        <View style={styles.mt20}>
-          {apiError && <Text style={styles.error}>{apiError}</Text>}
-          {errors.root && <Text style={styles.error}>{errors.root.message}</Text>}
+    <View className="flex-1 bg-white items-center pt-5">
+      <View className="w-[260]">
+        <View className="mt-5">
+          {apiError && <Text className="text-red-500">{apiError}</Text>}
+          {errors.root && <Text className="text-red-500">{errors.root.message}</Text>}
           <InputField
             error = {errors.title}
             control = {control}
@@ -86,54 +89,17 @@ export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<Dr
         </View>
         <TouchableOpacity
           onPress={handleSubmit(onSubmit)}
-          style={[styles.button, styles.mt16]}
+          className="flex-row gap-0 justify-center items-center rounded-lg bg-blue-600 p-3 mt-5"
         >
           {isLoading && (
             <ActivityIndicator
-              style={styles.activityIndicator}
+              className="mr-3 h-3 w-3"
               color="white"
             />
           )}
-          <Text style={styles.buttonText}>Send submission</Text>
+          <Text className="text-white">Send submission</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.WHITE,
-    alignItems: 'center',
-    paddingTop: 15,
-  },
-  button: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2563EB',
-    padding: 12,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: Colors.WHITE,
-  },
-  activityIndicator: {
-    marginRight: 18,
-    height: 10,
-    width: 10,
-  },
-  error: {
-    color: 'red',
-  },
-  mt16: {
-    marginTop: 16,
-  },
-  mt20: {
-    marginTop: 20,
-  },
-  w260: {
-    width: 260,
-  },
-});

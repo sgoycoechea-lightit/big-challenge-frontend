@@ -15,7 +15,7 @@ import Colors from '../constants/Colors';
 import InputField from '../components/InputField';
 
 //
-// This screen is implemented using react-hook-form, zod and nativewind.
+// This screen is implemented using react-hook-form and zod.
 //
 
 const schema = z.object({
