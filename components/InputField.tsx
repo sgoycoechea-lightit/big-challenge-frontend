@@ -32,9 +32,12 @@ export default function InputField({
   keyboardType = undefined,
 }: InputFieldProps) {
 
-  let textInputStyle: ViewStyle[] = [styles.inputBox];
-  if (bigTextBox) textInputStyle.push(styles.h120);
-  if (inputTitle == undefined) textInputStyle.push(styles.mt16);
+
+  const textInputStyle = [
+    styles.inputBox,
+    bigTextBox && styles.h120,
+    inputTitle == undefined && styles.mt16]
+    .filter(Boolean)
 
   return (
     <>
