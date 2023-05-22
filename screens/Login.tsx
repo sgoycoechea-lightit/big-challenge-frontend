@@ -8,15 +8,20 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { AuthContext, AuthContextType } from '../context/AuthProvider';
+
+import { AuthContext } from '../context/AuthProvider';
 import { AuthStackParamList } from '../Root';
 import Colors from '../constants/Colors';
 
+//
+// This screen is implemented without any external library.
+//
+
 export default function LoginScreen({ navigation }: NativeStackScreenProps<AuthStackParamList, 'Login'>
 ) {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const { login, error, isLoading } = useContext<AuthContextType>(AuthContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login, error, isLoading } = useContext(AuthContext);
 
   return (
     <View style={styles.container}>

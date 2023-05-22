@@ -12,7 +12,11 @@ import getErrorMessage from '../helpers/getErrorMessage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../Root';
 import Colors from '../constants/Colors';
+import InputField from '../components/InputField';
 
+//
+// This screen is implemented using react-hook-form and zod.
+//
 
 const schema = z.object({
   name: z.string().min(3, { message: "This name is too short" }),
@@ -29,13 +33,12 @@ const schema = z.object({
 type RegisterFormData = z.infer<typeof schema>;
 
 export default function RegisterScreen({ navigation }: NativeStackScreenProps<AuthStackParamList, 'Register'>) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     control,
     handleSubmit,
     formState: { errors },
-    
   } = useForm<RegisterFormData>({
     resolver: zodResolver(schema),
   });
@@ -68,66 +71,34 @@ export default function RegisterScreen({ navigation }: NativeStackScreenProps<Au
         <View style={styles.mt30}>
         {apiError && <Text style={styles.error}>{apiError}</Text>}
         {errors.root && <Text style={styles.error}>{errors.root.message}</Text>}
-          <Controller
-            control={control}
-            name="name"
-            defaultValue=""
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                style={[styles.inputBox, styles.mt16]}
-                value={value}
-                placeholder="Name"
-              />
-            )}
+          <InputField
+            error = {errors.name}
+            control = {control}
+            name = 'name'
+            placeholder = 'Name'
           />
-          {errors.name && <Text style={styles.error}>{errors.name.message}</Text>}
-          <Controller
-            control={control}
-            name="email"
-            defaultValue=""
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                style={[styles.inputBox, styles.mt16]}
-                value={value}
-                placeholder="Email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            )}
+          <InputField
+            error = {errors.email}
+            control = {control}
+            name = 'email'
+            placeholder = 'Email'
+            keyboardType = 'email-address'
+            autoCapitalize = 'none'
           />
-          {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
-          <Controller
-            control={control}
-            name="password"
-            defaultValue=""
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                style={[styles.inputBox, styles.mt16]}
-                value={value}
-                placeholder="Password"
-                secureTextEntry
-              />
-            )}
+          <InputField
+            error = {errors.password}
+            control = {control}
+            name = 'password'
+            placeholder = 'Password'
+            secureTextEntry
           />
-          {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
-          <Controller
-            control={control}
-            name="password_confirmation"
-            defaultValue=""
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                style={[styles.inputBox, styles.mt16]}
-                value={value}
-                placeholder="Repeat Password"
-                secureTextEntry
-              />
-            )}
+          <InputField
+            error = {errors.password_confirmation}
+            control = {control}
+            name = 'password_confirmation'
+            placeholder = 'Repeat Password'
+            secureTextEntry
           />
-          {errors.password_confirmation && <Text style={styles.error}>{errors.password_confirmation.message}</Text>}
           <Controller
             control={control}
             name="role"

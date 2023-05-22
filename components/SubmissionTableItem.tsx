@@ -11,6 +11,8 @@ import Colors from '../constants/Colors';
 import { formatDateFromString } from '../helpers/DateFormatter';
 
 export default function SubmissionTableItem({ item: submission }: { item: Submission }) {
+  const { title, status, doctor, created_at } = submission;
+
   const statusStyles = {
     [SubmissionStatus.Pending]: styles.pending,
     [SubmissionStatus.InProgress]: styles.inProgress,
@@ -33,20 +35,20 @@ export default function SubmissionTableItem({ item: submission }: { item: Submis
     <View style={styles.container}>
       <View style={styles.rowContainer}>
         <Text style={styles.title} numberOfLines={1}>
-          {submission.title}
+          {title}
         </Text>
-        <View style={[styles.status, statusStyles[submission.status]]}>
-          <Text style={statusTextStyles[submission.status]}>
-            {statusNames[submission.status]}
+        <View style={[styles.status, statusStyles[status]]}>
+          <Text style={statusTextStyles[status]}>
+            {statusNames[status]}
           </Text>
         </View>
       </View>
       <View style={styles.rowContainer}>
         <Text style={styles.doctor}>
-          {submission.doctor?.name ?? "No doctor assigned"}
+          {doctor?.name ?? "No doctor assigned"}
         </Text>
         <Text style={styles.dateCreated}>
-          {formatDateFromString(submission.created_at)}
+          {formatDateFromString(created_at)}
         </Text>
       </View>
     </View>

@@ -33,8 +33,8 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const login = (email: string, password: string) => {
     setIsLoading(true);
@@ -85,10 +85,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const isUserInfoComplete = () => {
     if (!user) return false;
-    if (user.role !== UserRole.PATIENT) return true;
-    return (user.phone_number !== null && user.phone_number !== undefined &&
-            user.weight !== null && user.weight !== undefined &&
-            user.height !== null && user.height !== undefined);
+    const { role, phone_number, weight, height, } = user;
+
+    if (role !== UserRole.PATIENT) return true;
+    return (phone_number !== null && phone_number !== undefined &&
+            weight !== null && weight !== undefined &&
+            height !== null && height !== undefined);
   }
 
   return (

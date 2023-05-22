@@ -7,7 +7,7 @@ import { DrawerContentScrollView, DrawerItemList, createDrawerNavigator, DrawerC
 import * as SecureStore from 'expo-secure-store';
 import 'react-native-gesture-handler';
 
-import { AuthContext, AuthContextType } from './context/AuthProvider';
+import { AuthContext } from './context/AuthProvider';
 import { setAxiosToken } from './helpers/axiosConfig';
 import HomeScreen from './screens/Home';
 import LoginScreen from './screens/Login';
@@ -103,7 +103,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 }
 
 export default function App() {
-  const { user, setUser, isUserInfoComplete } = useContext<AuthContextType>(AuthContext);
+  const { user, setUser, isUserInfoComplete } = useContext(AuthContext);
   
   useEffect(() => {
     SecureStore.getItemAsync('user')
