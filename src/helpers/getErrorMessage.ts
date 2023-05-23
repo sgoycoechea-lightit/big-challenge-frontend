@@ -4,5 +4,6 @@ export default function getErrorMessage(error: any): string {
         const key = Object.keys(error.response.data.error.fields)[0];
         value = error.response.data.error.fields[key];
     }
-    return error?.response?.data?.error?.message ?? value;
+    let message = error?.response?.data?.error?.message ?? value
+    return message ? message : "Something went wrong";
 }
