@@ -5,6 +5,7 @@ import { ActivityIndicator, Text, View } from 'react-native';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from 'react-query';
 
 import { instance as axiosInstance } from '../helpers/axiosConfig';
 import getErrorMessage from '../helpers/getErrorMessage';
@@ -14,7 +15,7 @@ import InputField from '../components/InputField';
 
 
 //
-// This screen is implemented using react-hook-form, zod and nativewind.
+// This screen is implemented using react-hook-form, zod, nativewind and react-query.
 //
 
 const schema = z.object({
@@ -31,8 +32,6 @@ const schema = z.object({
 type NewSubmissionFormData = z.infer<typeof schema>;
 
 export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<DrawerParamList, 'NewSubmission'>) {
-  const [apiError, setApiError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const {
     control,
     handleSubmit,
@@ -43,32 +42,32 @@ export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<Dr
     resolver: zodResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<NewSubmissionFormData> = (data) => {
-    setIsLoading(true);
-    axiosInstance
-      .post('/submissions', data)
-      .then(response => {
-        setApiError(null);
-        navigation.navigate('HomeStack', {
-          screen: 'Home',
-          params: { newSubmissionAdded: true },
-        });
-        reset();
-      })
-      .catch(error => {
-        console.log(error.response);
-        const message = getErrorMessage(error);
-        setApiError(message);
-      }).finally(() => {
-        setIsLoading(false);
+
+  const createSubmission = (data: NewSubmissionFormData) => axiosInstance.post('/submissions', data);
+
+  const { mutate: createSubmissionMutation, isLoading, error } = useMutation({
+    mutationFn: createSubmission,
+    onSuccess: () => {
+      navigation.navigate('HomeStack', {
+        screen: 'Home',
+        params: { newSubmissionAdded: true },
       });
+      reset();
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const onSubmit: SubmitHandler<NewSubmissionFormData> = (data) => {
+    createSubmissionMutation(data);
   };
 
   return (
     <View className="flex-1 bg-white items-center pt-5">
       <View className="w-[260]">
         <View className="mt-5">
-          {apiError && <Text className="text-red-500">{apiError}</Text>}
+          {!!error && <Text className="text-red-500">Something went wrong</Text>}
           {errors.root && <Text className="text-red-500">{errors.root.message}</Text>}
           <InputField
             error = {errors.title}
