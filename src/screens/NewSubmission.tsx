@@ -32,7 +32,6 @@ const schema = z.object({
 type NewSubmissionFormData = z.infer<typeof schema>;
 
 export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<DrawerParamList, 'NewSubmission'>) {
-  const [apiError, setApiError] = useState<string | null>(null);
   const {
     control,
     handleSubmit,
@@ -46,10 +45,9 @@ export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<Dr
 
   const createSubmission = (data: NewSubmissionFormData) => axiosInstance.post('/submissions', data);
 
-  const { mutate: createSubmissionMutation, isLoading } = useMutation({
+  const { mutate: createSubmissionMutation, isLoading, error } = useMutation({
     mutationFn: createSubmission,
     onSuccess: () => {
-      setApiError(null);
       navigation.navigate('HomeStack', {
         screen: 'Home',
         params: { newSubmissionAdded: true },
@@ -58,8 +56,6 @@ export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<Dr
     },
     onError: (error) => {
       console.log(error);
-      const message = getErrorMessage(error);
-      setApiError(message);
     },
   });
 
@@ -71,7 +67,7 @@ export default function NewSubmissionScreen({ navigation }: DrawerScreenProps<Dr
     <View className="flex-1 bg-white items-center pt-5">
       <View className="w-[260]">
         <View className="mt-5">
-          {apiError && <Text className="text-red-500">{apiError}</Text>}
+          {!!error && <Text className="text-red-500">Something went wrong</Text>}
           {errors.root && <Text className="text-red-500">{errors.root.message}</Text>}
           <InputField
             error = {errors.title}
