@@ -173,11 +173,6 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
   drawerContentContainer: {
     flex: 1,
     flexDirection: 'column',

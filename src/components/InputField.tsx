@@ -36,8 +36,8 @@ export default function InputField({
   const textInputStyle = [
     styles.inputBox,
     bigTextBox && styles.h120,
-    inputTitle == undefined && styles.mt16]
-    .filter(Boolean)
+    inputTitle == undefined && styles.mt16
+  ].filter(Boolean)
 
   return (
     <>

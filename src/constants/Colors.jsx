@@ -1,4 +1,3 @@
-
 export default {
     BLUE: '#2563EB',
     LIGHT_BLUE: '#DBEAFE',

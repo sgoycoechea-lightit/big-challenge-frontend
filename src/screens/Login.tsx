@@ -140,9 +140,6 @@ const styles = StyleSheet.create({
   mt16: {
     marginTop: 16,
   },
-  mr16: {
-    marginRight: 16,
-  },
   mt22: {
     marginTop: 22,
   },

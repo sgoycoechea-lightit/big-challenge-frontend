@@ -1,6 +1,6 @@
 import React from 'react';
-import { AuthProvider } from './context/AuthProvider';
-import Root from './Root';
+import { AuthProvider } from './src/context/AuthProvider';
+import Root from './src/Root';
 
 export default function App() {
   return (
