@@ -20,6 +20,60 @@ type GetSubmissionsResponse = {
   pagination: PaginationData,
 }
 
+const RenderSeparator = () => <View style={styles.separator}></View>
+
+const FooterComponent = (page: number, didFetchAllPages: boolean) => 
+  (didFetchAllPages || page === 1)
+    ? <RenderSeparator/>
+    : <ActivityIndicator size="large" color="gray" />
+
+const ListEmptyComponent = () => (
+  <View style={styles.alignCenter}>
+    <Text style={styles.emptyText}>Please create a new submission to start using the app!</Text>
+  </View>
+)
+
+const SubmissionList = ({
+  data,
+  handleItemPress,
+  didFetchAllPages,
+  page,
+  isRefreshing,
+  handleRefresh,
+  handleEnd
+}: {
+  data: Submission[];
+  handleItemPress: (submissionId: number) => void;
+  didFetchAllPages: boolean;
+  page: number;
+  isRefreshing: boolean;
+  handleRefresh: () => void;
+  handleEnd: () => void;
+}) => {
+  return (
+    data.length === 0 ? (
+      <ListEmptyComponent />
+    ) : (
+      <FlatList
+        data={data}
+        renderItem={({ item }) => (
+          <SubmissionTableItem
+            submission={item}
+            onPress={() => handleItemPress(item.id)}
+          />
+        )}
+        keyExtractor={item => item.id.toString()}
+        ItemSeparatorComponent={RenderSeparator}
+        ListFooterComponent={() => FooterComponent(page, didFetchAllPages)}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
+        onEndReached={handleEnd}
+        onEndReachedThreshold={0}
+      />
+    )
+  );
+};
+
 export default function HomeScreen({ route, navigation }: StackScreenProps<HomeStackParamList, 'Home'>) {
   const [data, setData] = useState<Submission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -79,36 +133,26 @@ export default function HomeScreen({ route, navigation }: StackScreenProps<HomeS
     }
   }
 
-  const RenderSeparator = () => (
-    <View style={styles.separator}></View>
-  )
+  function gotoSubmissionDetail(submissionId: number) {
+    navigation.navigate('SubmissionDetail', {
+      submissionId: submissionId,
+    });
+  }
 
   return (
     <View style={styles.container}>
-      {isLoading ? (
-        <ActivityIndicator style={styles.mt8} size="large" color="gray" />
-      ) : (
-        data.length === 0 ? (
-          <View style={styles.alignCenter}>
-            <Text style={styles.emptyText}>Please create a new submission to start using the app!</Text>
-          </View>
-        ) : (
-        <FlatList
-          data={data}
-          renderItem={props => <SubmissionTableItem {...props} />}
-          keyExtractor={item => item.id.toString()}
-          ItemSeparatorComponent={RenderSeparator}
-          ListFooterComponent={() =>
-            (didFetchAllPages || page === 1)
-             ? <RenderSeparator/>
-             : <ActivityIndicator size="large" color="gray" />
-          }
-          refreshing={isRefreshing}
-          onRefresh={handleRefresh}
-          onEndReached={handleEnd}
-          onEndReachedThreshold={0}
-        />
-      ))}
+      {isLoading
+        ? <ActivityIndicator style={styles.mt8} size="large" color="gray" />
+        : <SubmissionList
+            data={data}
+            handleItemPress={gotoSubmissionDetail}
+            didFetchAllPages={didFetchAllPages}
+            page={page}
+            isRefreshing={isRefreshing}
+            handleRefresh={handleRefresh}
+            handleEnd={handleEnd}
+          /> 
+      }
     </View>
   );
 }

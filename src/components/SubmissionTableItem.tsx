@@ -3,55 +3,36 @@ import {
   View,
   Text,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 
 import Submission from '../types/Submission';
-import SubmissionStatus from '../types/SubmissionStatus';
 import Colors from '../constants/Colors';
 import { formatDateFromString } from '../helpers/DateFormatter';
+import SubmissionStatusView from './SubmissionStatusView';
 
-export default function SubmissionTableItem({ item: submission }: { item: Submission }) {
+export default function SubmissionTableItem({ submission, onPress }: { submission: Submission, onPress: () => void }) {
   const { title, status, doctor, created_at } = submission;
 
-  const statusStyles = {
-    [SubmissionStatus.Pending]: styles.pending,
-    [SubmissionStatus.InProgress]: styles.inProgress,
-    [SubmissionStatus.Done]: styles.done,
-  };
-  
-  const statusTextStyles = {
-    [SubmissionStatus.Pending]: styles.pendingText,
-    [SubmissionStatus.InProgress]: styles.inProgressText,
-    [SubmissionStatus.Done]: styles.doneText,
-  }
-  
-  const statusNames = {
-    [SubmissionStatus.Pending]: 'Pending',
-    [SubmissionStatus.InProgress]: 'In Progress',
-    [SubmissionStatus.Done]: 'Done',
-  };
-
   return (
-    <View style={styles.container}>
-      <View style={styles.rowContainer}>
-        <Text style={styles.title} numberOfLines={1}>
-          {title}
-        </Text>
-        <View style={[styles.status, statusStyles[status]]}>
-          <Text style={statusTextStyles[status]}>
-            {statusNames[status]}
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.container}>
+        <View style={styles.rowContainer}>
+          <Text style={styles.title} numberOfLines={1}>
+            {title}
+          </Text>
+          <SubmissionStatusView status={status} />
+        </View>
+        <View style={styles.rowContainer}>
+          <Text style={styles.doctor}>
+            {doctor?.name ?? "No doctor assigned"}
+          </Text>
+          <Text style={styles.dateCreated}>
+            {formatDateFromString(created_at)}
           </Text>
         </View>
       </View>
-      <View style={styles.rowContainer}>
-        <Text style={styles.doctor}>
-          {doctor?.name ?? "No doctor assigned"}
-        </Text>
-        <Text style={styles.dateCreated}>
-          {formatDateFromString(created_at)}
-        </Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -77,31 +58,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 14,
     width: 210,
-  },
-  status: {
-    height: 24,
-    width: 95,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 30,
-  },
-  pending: {
-    backgroundColor: Colors.LIGHT_BLUE,
-  },
-  inProgress: {
-    backgroundColor: Colors.LIGHT_GREEN,
-  },
-  done: {
-    backgroundColor: Colors.BACKGROUND_GRAY,
-  },
-  pendingText : {
-    color: Colors.TEXT_BLUE,
-  },
-  inProgressText : {
-    color: Colors.TEXT_GREEN,
-  },
-  doneText : {
-    color: Colors.TEXT_GRAY_2,
   },
   dateCreated: {
     fontWeight: "400",

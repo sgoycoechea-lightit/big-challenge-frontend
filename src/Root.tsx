@@ -15,12 +15,16 @@ import RegisterScreen from './screens/Register';
 import PatientInfoScreen from './screens/PatientInfo';
 import NewSubmissionScreen from './screens/NewSubmission';
 import TaskHistoryScreen from './screens/TaskHistory';
+import SubmissionDetailScreen from './screens/SubmissionDetail';
 import Colors from './constants/Colors';
 import UserRole from './types/UserRole';
 
 export type HomeStackParamList = {
   Home: {
     newSubmissionAdded?: boolean;
+  },
+  SubmissionDetail: {
+    submissionId: number;
   },
 };
 
@@ -52,6 +56,11 @@ const HomeStackNavigator = () => {
         name="Home"
         component={HomeScreen}
         options={{ title: 'Home' }}
+      />
+      <HomeStack.Screen
+        name="SubmissionDetail"
+        component={SubmissionDetailScreen}
+        options={{ title: 'Submission detail' }}
       />
     </HomeStack.Navigator>
   );
@@ -131,6 +140,14 @@ export default function App() {
               drawerActiveTintColor: Colors.WHITE,
               drawerInactiveTintColor: Colors.LIGHT_GRAY,
               drawerInactiveBackgroundColor: Colors.DARK_BLUE_INACTIVE,
+              headerTintColor: Colors.ALMOST_WHITE,
+              headerStyle: {
+                backgroundColor: Colors.DARK_BLUE_INACTIVE,
+              },
+              headerTitleStyle: {
+                color: Colors.ALMOST_WHITE,
+              },
+              
             }}
           >
             {(user.role === UserRole.DOCTOR || isUserInfoComplete()) && (
