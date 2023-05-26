@@ -49,7 +49,7 @@ export default function SubmissionDetailScreen({ navigation, route }: StackScree
   
     const onBlur = () => {
       parentNavigator?.setOptions({
-        headerLeft: null,
+        headerLeft: undefined,
         title: "Home"
       });
     };
