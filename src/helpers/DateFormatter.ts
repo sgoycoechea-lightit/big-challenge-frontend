@@ -9,6 +9,7 @@ export const parseStringToDate = (dateString: string) => {
 };
 
 export const formatDateFromString = (date: string, formatString = 'M/d/yy') => {
+    if (!date) return '';
     const parsedDate = parseStringToDate(date);
     return format(parsedDate, formatString);
   };

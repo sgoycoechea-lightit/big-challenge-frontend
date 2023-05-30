@@ -13,6 +13,7 @@ export default {
     BACKGROUND_GRAY: '#F3F4F6',
 
     WHITE: '#FFFFFF',
+    ALMOST_WHITE: '#DDDDDD',
 
     LIGHT_GREEN: '#D1FAE5',
     TEXT_GREEN: '#065F46',
